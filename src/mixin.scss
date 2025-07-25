@@ -1,0 +1,69 @@
+@mixin dFlex($direction: row, $justify: center, $align: center, $gap: 0) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+    gap: $gap;
+}
+
+@mixin buttonBase($bg: white, $color: wheat, $border: 1px solid white, $radius: 8px, $padding: 8px 16px) {
+  background-color: $bg;
+  color: $color;
+  border: $border;
+  border-radius: $radius;
+  padding: $padding;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s;
+}
+
+@mixin imgResponsive($width: 100%, $height: auto, $fit: cover) {
+  width: $width;
+  height: $height;
+  object-fit: $fit;
+}
+
+@mixin transition($props: all, $duration: 0.3s, $ease: ease) {
+  transition: #{$props} #{$duration} #{$ease};
+}
+
+@mixin headline($color: $head-line-color, $size: 48px, $weight: 800, $spacing: 2px) {
+  color: $color;
+  font-size: $size;
+  font-weight: $weight;
+  letter-spacing: $spacing;
+  text-align: center;
+}
+
+@mixin boxShadow($shadow: 0 8px 32px rgba(0, 0, 0, 0.18)) {
+  box-shadow: $shadow;
+}
+
+@mixin color($color: wheat) {
+  color: $color;
+}
+
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == 'mobile' {
+    @media (max-width: 599px) { @content; }
+  }
+  @else if $breakpoint == 'tablet' {
+    @media (min-width: 600px) and (max-width: 1023px) { @content; }
+  }
+  @else if $breakpoint == 'desktop' {
+    @media (min-width: 1024px) { @content; }
+  }
+}
+
+@mixin formField($width: 100%, $height: 24px, $color: whitesmoke, $bg: #364856, $radius: 8px, $padding: 4px 8px, $font-size: 16px, $resize: null) {
+  width: $width;
+  height: $height;
+  color: $color;
+  background-color: $bg;
+  border: none;
+  outline: none;
+  border-radius: $radius;
+  padding: $padding;
+  font-size: $font-size;
+  @if $resize != null {
+    resize: $resize;
+  }
+}

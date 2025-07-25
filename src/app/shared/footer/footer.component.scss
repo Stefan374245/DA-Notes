@@ -1,0 +1,28 @@
+@import '../../../mixin.scss';
+
+footer {
+    position: relative;
+    height: 128px;
+    width: 100%;
+    background-color: #06171E;
+
+    >svg {
+        height: 128px;
+        width: 100%;
+    }
+
+    >div {
+        position: absolute;
+        @include dFlex(column, center, center);
+        height: 100%;
+        width: 100%;
+        top: 0;
+
+        >p {
+            @include color(#627B84);
+            font-size: 13px;
+            font-style: normal;
+            font-weight: 400;
+        }
+    }
+}

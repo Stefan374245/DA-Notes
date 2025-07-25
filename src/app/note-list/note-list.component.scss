@@ -1,0 +1,113 @@
+@import '../../mixin.scss';
+
+.notes_wrapper {
+    height: calc(100vh - 128px - 100px);
+    overflow-y: scroll;
+    background-color: #06171E;
+    padding: 16px;
+    >div:nth-child(2){
+        @include dFlex(row, space-evenly, center, 0);
+        flex-wrap: wrap;
+    }
+}
+
+.notes_list_button_wrapper{
+    width: 100%;
+    @include dFlex(row, space-between, center, 0);
+    padding: 32px;
+    >div:nth-child(1){
+        @include dFlex(row, flex-start, center, 8px);
+    }
+    >div:nth-child(2){
+        @include dFlex(row, flex-start, center, 8px);
+        position: relative;
+    }
+}
+
+@include respond-to('mobile') {
+    .notes_list_button_wrapper{
+        flex-direction: column;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        gap: 16px;
+    }
+}
+
+.btn_active:enabled{
+    background-color: #124658 !important;
+    color: #6BC1E1 !important;
+}
+
+.btn{
+    @include buttonBase(#09212A, #B6C4C9, 2px solid transparent, 24px, 16px 16px);
+    @include dFlex(row, center, center, 8px);
+    margin-left: 8px ;
+    box-sizing: border-box;
+    height: 32px;
+    @include transition(border, 0.3s, ease);
+    >svg {
+        height: 14px;
+        width: 14px;
+    }
+}
+
+.light_btn:disabled:hover {
+    border: 2px solid transparent !important;
+}
+
+.light_btn:disabled {
+    cursor: default;
+    background-color: #364449;
+}
+
+.light_btn:hover{
+    border: 2px solid #6BC1E1;
+}
+
+.trash_btn{
+    z-index: 2;
+    border: 2px solid #0D3240;
+}
+
+.trash_btn:hover{
+    border: 2px solid #6BC1E1;
+}
+
+.trash_btn_active{
+    color: white;
+    border: 2px solid #6BC1E1;
+}
+
+.back_arrow_active{
+    position: absolute;
+    left: -32px;
+}
+    
+.back_arrow_inactive{
+    position: absolute;
+    left: 16px;
+}
+
+.white_btn_round{
+    @include buttonBase(transparent, inherit, none, 100%, 4px);
+    @include dFlex(row, center, center);
+    z-index: 1;
+    height: 32px;
+    @include transition(all, 250ms, ease-in-out);
+    border: none;
+    display: inline-flex;
+    padding: 4px;
+    border-radius: 100%;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.white_btn_round:hover{
+    background-color: #124658;
+}
+
+.white_btn_round:active{
+    background-color: #0D3240;
+}
+
