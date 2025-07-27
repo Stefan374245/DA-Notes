@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { Note } from '../../interfaces/note.interface';
 import { NoteListService } from '../../firebase-services/note-list.service'
 import { FormsModule } from '@angular/forms';
@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './note.component.html',
   styleUrl: './note.component.scss'
 })
-export class NoteComponent {
+export class NoteComponent implements OnDestroy {
   @Input() note!:Note;
   edit = false;
   hovered = false;
@@ -51,5 +51,9 @@ export class NoteComponent {
 
   saveNote(){
     
+  }
+  
+  ngOnDestroy(): void {
+    // Hier kannst du z.B. Subscriptions oder Timer aufräumen
   }
 }

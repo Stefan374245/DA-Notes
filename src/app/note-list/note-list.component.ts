@@ -4,7 +4,7 @@ import { NoteListService } from '../firebase-services/note-list.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NoteComponent } from './note/note.component';
-
+import { inject } from '@angular/core';
 
 
 @Component({
@@ -18,6 +18,7 @@ export class NoteListComponent {
   noteList: Note[] = [];
   favFilter: "all" | "fav" = "all";
   status: "notes" | "trash" = "notes";
+  noteListService = inject(NoteListService);
 
   constructor(public noteService: NoteListService) {
     this.noteList = this.getDummyData()
@@ -38,6 +39,9 @@ export class NoteListComponent {
       this.favFilter = "all";
     }
   }
+  trackNote(index: number, note: Note) {
+  return note.id; // oder ein anderes eindeutiges Feld
+}
 
 
 
