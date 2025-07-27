@@ -1,6 +1,8 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+
+import { Component, Input, inject } from '@angular/core';
 import { Note } from '../../interfaces/note.interface';
-import { NoteListService } from '../../firebase-services/note-list.service'
+import { collection, doc, updateDoc, setDoc, deleteDoc, Firestore } from '@angular/fire/firestore';
+import { NoteListService } from '../../firebase-services/note-list.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -11,14 +13,18 @@ import { CommonModule } from '@angular/common';
   templateUrl: './note.component.html',
   styleUrl: './note.component.scss'
 })
-export class NoteComponent implements OnDestroy {
+export class NoteComponent {
   @Input() note!:Note;
   edit = false;
   hovered = false;
-  
+  firestore = inject(Firestore);
+
   constructor(private noteService: NoteListService){}
 
-  changeMarkedStatus(){
+  async changeMarkedStatus() {
+    if (!this.note.id) return;
+    const noteRef = doc(collection(this.firestore, 'notes'), this.note.id);
+    await updateDoc(noteRef, { marked: !this.note.marked });
     this.note.marked = !this.note.marked;
   }
 
@@ -37,23 +43,31 @@ export class NoteComponent implements OnDestroy {
     this.saveNote();
   }
 
-  moveToTrash(){
-    this.note.type = 'trash';
+  async moveToTrash() {
+    if (!this.note.id) return;
+    const trashRef = doc(collection(this.firestore, 'trash'), this.note.id);
+    await setDoc(trashRef, { ...this.note, type: 'trash' });
+    const noteRef = doc(collection(this.firestore, 'notes'), this.note.id);
+    await deleteDoc(noteRef);
   }
 
-  moveToNotes(){
-    this.note.type = 'note';
+  async moveToNotes() {
+    if (!this.note.id) return;
+    const noteRef = doc(collection(this.firestore, 'notes'), this.note.id);
+    await setDoc(noteRef, { ...this.note, type: 'note' });
+    const trashRef = doc(collection(this.firestore, 'trash'), this.note.id);
+    await deleteDoc(trashRef);
   }
 
-  deleteNote(){
-
+  async deleteNote() {
+    if (!this.note.id) return;
+    const trashRef = doc(collection(this.firestore, 'trash'), this.note.id);
+    await deleteDoc(trashRef);
   }
 
-  saveNote(){
-    
-  }
-  
-  ngOnDestroy(): void {
-    // Hier kannst du z.B. Subscriptions oder Timer aufräumen
+  async saveNote() {
+    if (!this.note.id) return;
+    const noteRef = doc(collection(this.firestore, 'notes'), this.note.id);
+    await updateDoc(noteRef, { title: this.note.title, content: this.note.content });
   }
 }

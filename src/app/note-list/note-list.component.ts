@@ -1,11 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Note } from '../interfaces/note.interface';
 import { NoteListService } from '../firebase-services/note-list.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NoteComponent } from './note/note.component';
-import { inject } from '@angular/core';
-
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-note-list',
@@ -14,75 +13,60 @@ import { inject } from '@angular/core';
   templateUrl: './note-list.component.html',
   styleUrl: './note-list.component.scss'
 })
-export class NoteListComponent {
+export class NoteListComponent implements OnDestroy {
   noteList: Note[] = [];
   favFilter: "all" | "fav" = "all";
   status: "notes" | "trash" = "notes";
-  noteListService = inject(NoteListService);
+  private notesSub!: Subscription;
+  private trashSub!: Subscription;
 
   constructor(public noteService: NoteListService) {
-    this.noteList = this.getDummyData()
+    this.subscribeToNotes();
   }
 
-  changeFavFilter(filter:"all" | "fav"){
+  subscribeToNotes() {
+    if (this.trashSub) {
+      this.trashSub.unsubscribe();
+    }
+    this.notesSub = this.noteService.notes$.subscribe(notes => {
+      this.noteList = notes;
+    });
+  }
+
+  subscribeToTrash() {
+    if (this.notesSub) {
+      this.notesSub.unsubscribe();
+    }
+    this.trashSub = this.noteService.trash$.subscribe(trash => {
+      this.noteList = trash;
+    });
+  }
+
+  get filteredNotes(): Note[] {
+    let list = this.noteList;
+    if (this.status !== 'trash' && this.favFilter === 'fav') {
+      list = list.filter(n => n.marked);
+    }
+    return list;
+  }
+
+  changeFavFilter(filter: "all" | "fav") {
     this.favFilter = filter;
-    
   }
 
-  changeTrashStatus(){
-        debugger;
-
-    if(this.status == "trash"){
+  changeTrashStatus() {
+    if (this.status == "trash") {
       this.status = "notes";
+      this.subscribeToNotes();
     } else {
       this.status = "trash";
       this.favFilter = "all";
+      this.subscribeToTrash();
     }
   }
-  trackNote(index: number, note: Note) {
-  return note.id; // oder ein anderes eindeutiges Feld
-}
 
-
-
-
-  getDummyData(): Note[] {
-    return [
-      {
-        id: "21sasd561dd4sdf",
-        type: "note",
-        title: "Block, Inline, and Inline-Block",
-        content: "https://www.youtube.com/watch?v=x_i2gga-sYg",
-        marked: true,
-      },
-      {
-        id: "25sd4f561w54sdf",
-        type: "note",
-        title: "css selector",
-        content: `kind p > b   (direktes kind) 
-        nachfahren p b  (alle nachfahren)
-        geschwister p ~ b (auf gleicher ebene ist VOR dem p ein b)`,
-        marked: true,
-      },
-      {
-        id: "54a4s6d546ff",
-        type: "note",
-        title: "aufräumen",
-        content: "Wohnzimmer saugen",
-        marked: false,
-      },
-      {
-        id: "2a35s4d654a6s4d",
-        type: "note",
-        title: "links",
-        content: `Reihenfolge: a:visited 
-        a:focus 
-        a:hover 
-        a:active
-        merkspruch: LoVe HAte`,
-        marked: true,
-      }
-    ];
+  ngOnDestroy() {
+    if (this.notesSub) this.notesSub.unsubscribe();
+    if (this.trashSub) this.trashSub.unsubscribe();
   }
-
 }

@@ -133,9 +133,6 @@
         </div>
     </div>
     <div>
-        
-        @for (note of noteList; track note) {
-            <app-note [note]="note"></app-note>
-          }
+        <app-note *ngFor="let note of filteredNotes; let i = index" [note]="note"></app-note>
     </div>
 </div>

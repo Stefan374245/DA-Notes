@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { collection, Firestore, doc, onSnapshot } from '@angular/fire/firestore';
+import { collection, Firestore, doc, onSnapshot} from '@angular/fire/firestore';
 import { Note } from '../interfaces/note.interface';
 import { BehaviorSubject } from 'rxjs';
 
@@ -10,7 +10,9 @@ export class NoteListService {
   firestore = inject(Firestore);
 
   notes$ = new BehaviorSubject<Note[]>([]);
+  trash$ = new BehaviorSubject<Note[]>([]);
   unsubscribeNotes: () => void;
+  unsubscribeTrash: () => void;
 
   constructor() {
     this.unsubscribeNotes = onSnapshot(this.getNotesRef(), (snapshot) => {
@@ -18,6 +20,15 @@ export class NoteListService {
       snapshot.forEach(doc => notes.push({ ...doc.data(), id: doc.id } as Note));
       this.notes$.next(notes);
     });
+    this.unsubscribeTrash = onSnapshot(this.getTrashRef(), (snapshot) => {
+      const trash: Note[] = [];
+      snapshot.forEach(doc => trash.push({ ...doc.data(), id: doc.id } as Note));
+      this.trash$.next(trash);
+    });
+  }
+
+  getTrashRef() {
+    return collection(this.firestore, 'trash');
   }
 
   getNotesRef() {
@@ -28,11 +39,13 @@ export class NoteListService {
     return doc(collection(this.firestore, collectionId), documentId);
   }
 
-  // Call this in ngOnDestroy to unsubscribe
-  destroy() {
+
+  ngOnDestroy() {
     if (this.unsubscribeNotes) {
       this.unsubscribeNotes();
     }
+    if (this.unsubscribeTrash) {
+      this.unsubscribeTrash();
+    }
   }
 }
-// Die Daten werden jetzt per onSnapshot aktualisiert und können manuell unsubscribed werden.
