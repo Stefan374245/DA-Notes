@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "note-flow-20505": {
+      "hosting": {
+        "danotes": [
+          "note-flow-20505"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "note-flow-20505"
+  }
+}

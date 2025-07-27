@@ -1,6 +1,8 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+
+import { Component, Output, EventEmitter, inject } from '@angular/core';
 import { Note } from '../interfaces/note.interface';
-import { NoteListService } from '../firebase-services/note-list.service'
+import { collection, addDoc, Firestore } from '@angular/fire/firestore';
+import { NoteListService } from '../firebase-services/note-list.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -16,7 +18,11 @@ export class AddNoteDialogComponent {
   title = "";
   description = "";
 
-  constructor(public noteService: NoteListService){}
+
+  notes$ = this.noteService.notes$;
+  firestore = inject(Firestore);
+
+  constructor(public noteService: NoteListService) {}
 
   closeDialog() {
     this.title = "";
@@ -24,8 +30,15 @@ export class AddNoteDialogComponent {
     this.addDialogClosed.emit(false);
   }
 
-  addNote(){
-    //beachte das closeDialog() zum Schluss kommt, denn es leert die Variablen
+  async addNote() {
+    if (!this.title.trim() && !this.description.trim()) return;
+    const note: Omit<Note, 'id'> = {
+      title: this.title,
+      content: this.description,
+      marked: false,
+      type: 'note',
+    };
+    await addDoc(collection(this.firestore, 'notes'), note);
     this.closeDialog();
   }
 }

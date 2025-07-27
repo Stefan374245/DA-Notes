@@ -11,6 +11,11 @@
     }
 }
 
+.dark-mode .notes_wrapper {
+    background-color: #f5f5f5;
+    color: #222;
+}
+
 .notes_list_button_wrapper{
     width: 100%;
     @include dFlex(row, space-between, center, 0);
