@@ -10,7 +10,6 @@
     margin: 16px;
     background-color: #09212A;
     border-radius: 32px;
-    color: #fff;
     
     >h3 {
         
@@ -111,6 +110,7 @@
 .btn{
     @include buttonBase(transparent, #FD5B4F, none, 24px, 16px 24px);
     @include dFlex(row, center, center, 8px);
+    cursor: pointer;
     margin-left: 8px ;
     box-sizing: border-box;
     height: 32px;

@@ -5,21 +5,17 @@ header {
     padding: 20px 32px; 
     background-color: #09212A;
     height: 100px;
-    color: #fff;
+    position: relative;
 
     > div > img {
         width: 160px;
     }
 }
 
-.dark-mode header {
-    background-color: #eaeaea;
-    color: #222;
-}
-
 .addBtn{
     @include buttonBase(transparent, #FD5B4F, 2px solid #FD5B4F, 24px, 0 24px);
     height: 48px;
+    cursor: pointer;
     @include dFlex(row, center, center);
     @include transition(background-color 0.3s, color 0.3s);
     >div{
@@ -34,29 +30,13 @@ header {
     }
 }
 
-.dark-mode .addBtn {
-    color: #FD5B4F;
-    border-color: #FD5B4F;
-    background: #fff;
-}
-
 .addBtn:hover {
     color: white;
     background-color: #FD5B4F;
-}
-
-.dark-mode .addBtn:hover {
-    background-color: #FD5B4F;
-    color: #fff;
 }
 
 .addBtn:active {
     color: white;
     background-color: #FC2D1C;
     border-color: #FC2D1C;
-}
-
-.dark-mode .addBtn:active {
-    background-color: #FC2D1C;
-    color: #fff;
 }

@@ -1,13 +1,17 @@
-<div class="app_wrapper">
-  <div class="dialog_wrapper"
-      [ngClass]="{'dialog_open': addDialogOpen, 'dialog_closed': !addDialogOpen}">
-      <div>
-          <app-add-note-dialog (addDialogClosed)="addDialogOpen = $event"></app-add-note-dialog>
-      </div>
-  </div>
+<ng-container *ngIf="!isAuthPage(); else authPage">
+  <!-- Haupt-App-UI -->
   <app-header class="z_index_m" (openNoteChange)="addDialogOpen = $event"></app-header>
-
-  <app-note-list class="z_index_m"></app-note-list>
-  
+  <div class="main-content">
+    <app-note-list class="z_index_m"></app-note-list>
+    <div class="dialog_wrapper"
+        [ngClass]="{'dialog_open': addDialogOpen, 'dialog_closed': !addDialogOpen}">
+        <div>
+            <app-add-note-dialog (addDialogClosed)="addDialogOpen = $event"></app-add-note-dialog>
+        </div>
+    </div>
+  </div>
   <app-footer class="z_index_m"></app-footer>
-</div>
+</ng-container>
+<ng-template #authPage>
+  <router-outlet></router-outlet>
+</ng-template>

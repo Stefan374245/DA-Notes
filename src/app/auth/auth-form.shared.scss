@@ -1,0 +1,51 @@
+@import "../../mixin.scss";
+
+.app-login,
+.app-register {
+  @include dFlex(column, center, center, 16px);
+ 
+  margin-bottom: 12px;
+  padding: 32px 64px;
+  width: 500px;
+  background-color: #09212a;
+  border-radius: 32px;
+}
+
+form {
+  @include dFlex(column, center, center, 8px);
+  margin-bottom: 12px;
+
+}
+input
+ {
+    color: #B6C4C9;
+    outline: none;
+    border: none;
+    padding: 16px 16px;
+    border-radius: 16px;
+    width: 100%;
+    background-color: #0D3240;
+}
+.error {
+  color: red;
+  margin-top: 8px;
+  width: 100%;
+}
+
+.register-link {
+  color: #6bc1e1;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-block;
+  margin-top: 8px;
+}
+
+.register-link:hover {
+  color: #fd5b4f;
+}
+
+ app-login {
+    @include dFlex(column, center, center);
+    
+    height: 100vh;
+  }
