@@ -1,7 +1,7 @@
 
 import { Component, Input, inject } from '@angular/core';
 import { Note } from '../../interfaces/note.interface';
-import { collection, doc, updateDoc, setDoc, deleteDoc, Firestore } from '@angular/fire/firestore';
+// ...existing code...
 import { NoteListService } from '../../firebase-services/note-list.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -17,14 +17,12 @@ export class NoteComponent {
   @Input() note!:Note;
   edit = false;
   hovered = false;
-  firestore = inject(Firestore);
+  // firestore = inject(Firestore); // nicht mehr benötigt
 
-  constructor(private noteService: NoteListService){}
+  constructor(public noteService: NoteListService){}
 
   async changeMarkedStatus() {
-    if (!this.note.id) return;
-    const noteRef = doc(collection(this.firestore, 'notes'), this.note.id);
-    await updateDoc(noteRef, { marked: !this.note.marked });
+    await this.noteService.changeMarkedStatus(this.note);
     this.note.marked = !this.note.marked;
   }
 
@@ -44,30 +42,18 @@ export class NoteComponent {
   }
 
   async moveToTrash() {
-    if (!this.note.id) return;
-    const trashRef = doc(collection(this.firestore, 'trash'), this.note.id);
-    await setDoc(trashRef, { ...this.note, type: 'trash' });
-    const noteRef = doc(collection(this.firestore, 'notes'), this.note.id);
-    await deleteDoc(noteRef);
+    await this.noteService.moveToTrash(this.note);
   }
 
   async moveToNotes() {
-    if (!this.note.id) return;
-    const noteRef = doc(collection(this.firestore, 'notes'), this.note.id);
-    await setDoc(noteRef, { ...this.note, type: 'note' });
-    const trashRef = doc(collection(this.firestore, 'trash'), this.note.id);
-    await deleteDoc(trashRef);
+    await this.noteService.moveToNotes(this.note);
   }
 
   async deleteNote() {
-    if (!this.note.id) return;
-    const trashRef = doc(collection(this.firestore, 'trash'), this.note.id);
-    await deleteDoc(trashRef);
+    await this.noteService.deleteNote(this.note);
   }
 
   async saveNote() {
-    if (!this.note.id) return;
-    const noteRef = doc(collection(this.firestore, 'notes'), this.note.id);
-    await updateDoc(noteRef, { title: this.note.title, content: this.note.content });
+    await this.noteService.saveNote(this.note);
   }
 }

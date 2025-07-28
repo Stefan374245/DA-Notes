@@ -1,7 +1,8 @@
 export interface Note {
-    id: string;
+    id?: string;
     type: "note" | "trash";
-    title:string;
-    content:string;
+    title: string;
+    content: string;
     marked: boolean;
+    uid?: string; // User-ID für Multi-User
 }

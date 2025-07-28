@@ -1,7 +1,5 @@
-
 import { Component, Output, EventEmitter, inject } from '@angular/core';
 import { Note } from '../interfaces/note.interface';
-import { collection, addDoc, Firestore } from '@angular/fire/firestore';
 import { NoteListService } from '../firebase-services/note-list.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -20,7 +18,6 @@ export class AddNoteDialogComponent {
 
 
   notes$ = this.noteService.notes$;
-  firestore = inject(Firestore);
 
   constructor(public noteService: NoteListService) {}
 
@@ -32,13 +29,13 @@ export class AddNoteDialogComponent {
 
   async addNote() {
     if (!this.title.trim() && !this.description.trim()) return;
-    const note: Omit<Note, 'id'> = {
+    const note: Note = {
       title: this.title,
       content: this.description,
       marked: false,
-      type: 'note',
+      type: "note"
     };
-    await addDoc(collection(this.firestore, 'notes'), note);
+    await this.noteService.addNote(note);
     this.closeDialog();
   }
 }
