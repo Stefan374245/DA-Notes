@@ -1,7 +1,6 @@
 
 import { Component, Input, inject } from '@angular/core';
 import { Note } from '../../interfaces/note.interface';
-// ...existing code...
 import { NoteListService } from '../../firebase-services/note-list.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -17,7 +16,6 @@ export class NoteComponent {
   @Input() note!:Note;
   edit = false;
   hovered = false;
-  // firestore = inject(Firestore); // nicht mehr benötigt
 
   constructor(public noteService: NoteListService){}
 
